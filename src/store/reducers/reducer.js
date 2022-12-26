@@ -33,7 +33,7 @@ const DataReducer = (state = initialState, action) => {
       return {
          ...state,
          loading: false,
-         data: [...state.data, action.payload]
+         data: action.payload
       };
     }
      case Types.REMOVE_SELECTED_ITEM:
@@ -41,17 +41,19 @@ const DataReducer = (state = initialState, action) => {
         ...state,
         data: state.data.filter((el) => el._id !== action.payload),
       };
-      case Types.UPDATE_DATA:{
+    //   case Types.UPDATE_DATA:{
        
-      const { _id, title, description,duration } = action.payload
-      const existingPost = state.data.find(post => post._id === _id)
-      if (existingPost) {
-        existingPost.title = title
-        existingPost.description = description
-        existingPost.duration = duration
-      
-    }
-      }
+    //   const { _id, title, description,duration } = action.payload
+    //   console.log("lll",title)
+    //   const existingPost = state.data.find(post => post._id === _id)
+    //   if (existingPost) {
+    //     existingPost.title = title
+    //     existingPost.description = description
+    //     existingPost.duration = duration
+    //   existingPost.activityType=existingPost.activityType
+    //   existingPost.date = existingPost.date 
+    // }
+    //   }
  
 
     default:

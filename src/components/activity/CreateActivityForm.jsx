@@ -3,34 +3,28 @@ import CreateActivity from "./CreateActivity"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch,useSelector } from "react-redux";
-import { fetchData, postData } from "../../store/actions/actions"
+import { fetchData, postData, updateItem, saveData} from "../../store/actions/actions"
+// import { useNavigate } from 'react-router-dom';
 
-const CreateActivityForm= () => {
+
+const CreateActivityForm= ({editClick, selectedItem}) => {
+    // const navigate = useNavigate();
   const types=["swim","walk","ride","bicycle ride","run","hike"]
    const dispatch = useDispatch();
-  const title = useRef();
+  const title = useRef("hello");
   const description = useRef();
   const duration = useRef();
   const status = useRef();
   const date = useRef();
   const { data, loading } = useSelector((state) => ({...state.data}) );
 
-//  console.log("-------000", data);
-//  const url = 'https://etracker.onrender.com/api/activity';
+//  console.log("selectedItem------->", selectedItem);
 
-// const fetchData = async () => {
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     console.log(data);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
   useEffect(() => {
-//  fetchData()
+
      dispatch(fetchData());
+    
   }, [])
 
 
@@ -40,6 +34,37 @@ const CreateActivityForm= () => {
 
     const submitForm=(e)=>{
       e.preventDefault()
+      if(editClick===true){
+         let resultedArray=data?.map((item)=>{
+          if(item._id===selectedItem._id){
+            return{
+              ...item,
+              title:title.current.value,
+             duration:duration.current.value,
+             description:description.current.value,
+            }
+          }
+          else{
+            return{
+              ...item
+            }
+          }
+         })
+         dispatch(saveData(resultedArray));
+         let objSending={
+            activityID:selectedItem._id,
+             title:title.current.value,
+             duration:duration.current.value,
+             description:description.current.value,
+             date:selectedItem.date,
+             activityType:selectedItem.activityType
+         }
+         dispatch(updateItem(objSending))
+         
+   
+        //  console.log("resultedArray------>",resultedArray)
+      }
+      else{
       const result={
         title:title.current.value,
         duration:duration.current.value,
@@ -49,24 +74,21 @@ const CreateActivityForm= () => {
         owner:"63a97236dcfde4003269d5b8"
       }
 
-      console.log("result", result)
-      // if(result.title!="" && result.duration!="" && result.description!=""){
+      // console.log("startDate", startDate)
+     
          dispatch(postData(result));
-        
-
-      // }
-          dispatch(fetchData());
          title.current.value=" ";
          duration.current.value=" ";
          description.current.value=" "
-            //  window.location = '/';
          
+    }
+    dispatch(fetchData());
     }
 
 
 
 
-  return (<div >
+  return (<div>
                 <h3>Create New Exercise Activity</h3>
 
                 <form className="container-fluid border mt-3" style={{width:"75%"}}>
@@ -76,6 +98,7 @@ const CreateActivityForm= () => {
     ref={title} placeholder="Title"
                         required
                         className="form-control"
+                        defaultValue={editClick===true?selectedItem?.title:""}
                  />
                  </div>
                  <div className="form-group d-flex m-3">
@@ -104,6 +127,7 @@ const CreateActivityForm= () => {
                             ref={duration} placeholder="duration"
                         required
                         className="form-control"
+                         defaultValue={editClick===true?selectedItem?.duration:""}
                          />
        </div>
        <div  className="d-flex m-2 col-md-4 col-sm-12">
@@ -117,7 +141,8 @@ const CreateActivityForm= () => {
 
                     <div className="form-group  m-3 d-flex ">
   <label for="exampleFormControlTextarea1" className="form-label fw-bold m-2">Description</label>
-  <textarea   required  ref={description} placeholder="Description" className="form-control" id="exampleFormControlTextarea1" rows="5"/>
+  <textarea   required  ref={description} placeholder="Description" className="form-control" id="exampleFormControlTextarea1"
+   defaultValue={editClick===true?selectedItem?.description:""} rows="5"/>
 </div>
 
 <button
@@ -136,7 +161,7 @@ const CreateActivityForm= () => {
               <span class="sr-only m-3">Loading...</span>
             </>
           ) : (
-            "CREATE EXERCISE ACTIVITY"
+           editClick===true?"UPDATE EXERCISE ACTIVITY": "CREATE EXERCISE ACTIVITY"
           )}
         </button>
                     

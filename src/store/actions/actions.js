@@ -36,21 +36,7 @@ export const removeSelectedItem = (_id) => {
 
 
 const url = 'https://etracker.onrender.com/api/activity';
-// export const fetchData = async () => {
-//   try {
-//     dispatch(fetchDataStart());
-//     const response = await fetch(url);
-//     if(response){
-//        const data =  response.json();
-//     dispatch(fetchDataSuccess(data));
-//     console.log(data);
-//     }
-   
-//   } catch (error) {
-//      dispatch(fetchDataFail(error));
-//     console.log(error);
-//   }
-// };
+
 
 
 // export function fetchData() {
@@ -78,9 +64,7 @@ export function fetchData() {
     // const owner = "63a19ff8c3b79f4d200fe900"
     const owner="63a97236dcfde4003269d5b8"
    return async (dispatch) => {
-    //  console.log("_id===============>",data);
       dispatch(fetchDataStart());
-    // dispatch(removeSelectedItem(_id));
     try{
      await axios.post(`${url}/getOwnerActivity`,{owner})
        .then(function (response) {
@@ -113,9 +97,8 @@ export function postData(result) {
   })
     .then(res=>res.json())
   .then(data=>{
-   
-    dispatch(saveData(data))
      console.log("action saveDATA---->",data)
+     dispatch(saveData(data))
   });
      
     }
@@ -126,24 +109,7 @@ export function postData(result) {
      
   };
 }
-// export const removeItem = (_id) => {
-//   return async (dispatch) => {
-//     dispatch(removeSelectedItem(_id));
-//     try {
-//       console.log(_id); 
-//       await fetch(`${url}/delete`, {
-//     method: 'post',
-//     headers: {
-//       'content-type': 'application/json'
-//     },
-//      _id: JSON.stringify(_id)
-//   })
-     
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-// };
+
 export function removeItem(_id) {
    return async (dispatch) => {
      console.log("_id===============>",_id);
@@ -167,14 +133,14 @@ export function removeItem(_id) {
 export function updateItem(data) {
    return async (dispatch) => {
      console.log("update data which we want===============>",data);
-    // dispatch(removeSelectedItem(_id));
-     dispatch(updatedData(data))
-     await axios.post(`${url}/update`,{data})
+
+     await axios.post(`${url}/update`,data)
        .then(function (response) {
          if (response) {
            const data = response.data;
             console.log("response.data.UPDATE------->", data);
-            
+            dispatch(saveData(data))
+            window.location = '/'
          }
        })
        .catch(function (error) {
