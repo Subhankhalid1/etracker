@@ -168,12 +168,13 @@ export function updateItem(data) {
    return async (dispatch) => {
      console.log("update data which we want===============>",data);
     // dispatch(removeSelectedItem(_id));
+     dispatch(updatedData(data))
      await axios.post(`${url}/update`,{data})
        .then(function (response) {
          if (response) {
            const data = response.data;
             console.log("response.data.UPDATE------->", data);
-             dispatch(updatedData(data))
+            
          }
        })
        .catch(function (error) {

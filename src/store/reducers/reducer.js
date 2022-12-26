@@ -52,19 +52,7 @@ const DataReducer = (state = initialState, action) => {
       
     }
       }
-  //   case Types.UPDATE_DATA: {
-  //      const { post, lang } = action.payload;
-  //     const e = { ...state }
-
-  //  console.log("reducers-----> action.payload",lang);
-  //      const existingData = e.data.find(
-  //        (item) => item.area == post.area
-  //      );
-  //     console.log("existing Data====>", existingData.languages);
-  //     if (existingData) {
-  //      return console.log("existing state------>",existingData.languages=lang)
-  //     }
-  //   }
+ 
 
     default:
       return state;
