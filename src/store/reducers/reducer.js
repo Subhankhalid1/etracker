@@ -2,13 +2,20 @@ import * as Types from "../types/actionTypes.js";
 
 const initialState = {
   data: [],
+  user: null,
   loading: false,
   error: null,
 };
 
 const DataReducer = (state = initialState, action) => {
-  console.log("action=====>", action?.payload)
+  // console.log("action=====>", action?.payload)
   switch (action.type) {
+    case Types.USER_AUTH: {
+      return {
+        ...state,
+        user: action.payload,
+      };
+    }
     case Types.FETCH_DATA_START: {
       return {
         ...state,
@@ -19,7 +26,7 @@ const DataReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        data: action.payload 
+        data: action.payload
       };
     }
     case Types.FETCH_DATA_FAIL: {

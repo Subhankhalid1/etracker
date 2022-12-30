@@ -1,8 +1,14 @@
+
 import * as Types from "../types/actionTypes";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 
+export const saveUser = (user) => {
+  return {
+    type: Types.USER_AUTH,
+    payload: user,
+  };
+};
 const fetchDataStart = () => ({
   type: Types.FETCH_DATA_START,
 });
@@ -36,7 +42,7 @@ export const removeSelectedItem = (_id) => {
 
 
 const url = 'https://etracker.onrender.com/api/activity';
-
+const uurl ='https://etracker.onrender.com/api/user'
 
 
 // export function fetchData() {
@@ -59,10 +65,52 @@ const url = 'https://etracker.onrender.com/api/activity';
 //   };
 // }
 
+const login = (data) => {
+  return async dispatch => {
+    
+      await axios
+        .post(`${uurl}/login`, data)
+        .then(function (response) {
+          if (response?.status == 200) {
+            dispatch(saveUser(response.data));
+           
+          }
+        })
+        .catch(function (error) {
+            console.log("Error-->",error?.response?.data);
+           dispatch(saveUser(null));
+          
+        });
+    
+  };
+};
+const SignUp = (data) => {
+  return async dispatch => {
+    
+      await axios.post(`${uurl}/register`, data)
+        .then(function (response) {
+          if (response?.status == 200) {
+            dispatch(saveUser(response.data));
+           
+          
+          }
+        })
+        .catch(function (error) {
+          console.log("Error-->",error?.response?.data);
+         
+    
+           dispatch(saveUser(null));
+          
+        });
+    
+  };
+};
 
-export function fetchData() {
-    // const owner = "63a19ff8c3b79f4d200fe900"
-    const owner="63a97236dcfde4003269d5b8"
+
+export function fetchData(user) {
+    //const owner = "63aaee95bb328d0032d0834b"
+     const owner=user?.user?._id
+    // console.log(user?user?._id,"user own get data-->",user)
    return async (dispatch) => {
       dispatch(fetchDataStart());
     try{
@@ -70,7 +118,7 @@ export function fetchData() {
        .then(function (response) {
          if (response) {
            const data = response.data;
-            console.log("response.data------->", data);
+            // console.log("response.data------->", data);
             dispatch(fetchDataSuccess(data))
        
          }
@@ -98,12 +146,12 @@ export function postData(result) {
     .then(res=>res.json())
   .then(data=>{
      console.log("action saveDATA---->",data)
+  
      dispatch(saveData(data))
   });
      
     }
     catch (error) {
-      // dispatch(fetchDataFail(error));
     console.log(error);
   }
      
@@ -112,15 +160,13 @@ export function postData(result) {
 
 export function removeItem(_id) {
    return async (dispatch) => {
-     console.log("_id===============>",_id);
+    //  console.log("_id===============>",_id);
     dispatch(removeSelectedItem(_id));
      await axios.post(`${url}/delete`,{_id})
        .then(function (response) {
          if (response) {
            const data = response.data;
-            console.log("response.data.DELETE------->", data);
-          
-       
+            // console.log("response.data.DELETE------->", data);
          }
        })
        .catch(function (error) {

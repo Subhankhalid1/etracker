@@ -5,7 +5,7 @@ const CreateActivity = () => {
   const [editClick, setEditClick] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
   return (
-    <div>
+    <div className="pb-5">
       <CreateActivityForm editClick={editClick} selectedItem={selectedItem} />
       <CardFrame
         editClick={editClick}
